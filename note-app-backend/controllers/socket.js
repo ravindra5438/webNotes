@@ -4,13 +4,6 @@ const socketController = (io) => {
   io.on("connection", (socket) => {
     console.log("A user connected.", socket.id);
 
-    Note.find()
-      .limit(10)
-      .then((notes) => {
-        socket.emit("note", notes);
-      })
-      .catch((error) => console.log("Error fetching notes", error));
-
     socket.on("note:create", (data) => {
       const note = new Note({
         title: data.title,
