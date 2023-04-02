@@ -1,9 +1,15 @@
 import Note from "../models/Note.js";
 
 const socketController = (io) => {
+
+
   io.on("connection", (socket) => {
     console.log("A user connected.", socket.id);
 
+    Note.find().limit(10).then(notes => {
+      socket.emit('data', notes);
+    }).catch(err => console.log(err))
+    
     socket.on("note:create", (data) => {
       const note = new Note({
         title: data.title,
@@ -14,6 +20,7 @@ const socketController = (io) => {
       note
         .save()
         .then((newNote) => {
+          console.log(newNote);
           io.emit("note:create", newNote);
         })
         .catch((error) => console.log("Error creating note", error));
@@ -46,6 +53,7 @@ const socketController = (io) => {
     socket.on("disconnect", () => {
       console.log("A user disconnected.");
     });
+
   });
 };
 
