@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import MyCard from '@/components/MyCard';
 import { socket } from '@/socket';
 import Modal from '@/components/Modal';
+import Navbar from '@/components/Navbar';
 
 const Home = () => {
   const router = useRouter();
@@ -44,27 +45,15 @@ const Home = () => {
     router.push('/login'); 
   }
 
-  // socket.on("note:create", (data) => {
-  //   console.log("data from user",data);
-  // })
-
-  // socket.on("note:read",(data) => {
-  //   console.log("all notes from client side",data)
-  // })
-
-
   
   if (!isLoggedIn) {
     return null;
   }
 
   return (
-    <div style={{margin:"0 0 0 8%",alignSelf:'center'}}>
-      <div style={{display:"flex"}}>
-      <Modal thisUser={router.query.user}/>
-      <button onClick={handleLogout}>Logout</button>
-      </div>
-      <div style={{display:"flex",flexDirection:"row",flexWrap:"wrap"}}>
+    <div>
+      <Navbar logOut={handleLogout} user={router.query.user}/>
+      <div style={{display:"flex",flexDirection:"row",justifyContent:'center',alignItems:'center',flexWrap:"wrap"}}>
         {data.map(item => {
 
           return (

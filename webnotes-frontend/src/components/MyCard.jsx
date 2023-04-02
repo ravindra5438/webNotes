@@ -33,7 +33,7 @@ const MyCard = ({id,title, description, users,thisUser, onDelete, onUpdate }) =>
 
 
   return (
-    <Card style={{width:345,backgroundColor:'greenyellow'}}>
+    <Card sx={{width:"100%",transition:"300ms ease-in-out","&:hover":{backgroundColor:'yellow',transform:"scale(1.1)",zIndex:99},"&:hover .icBtn":{opacity:1,display:'inline'},minWidth:250,maxWidth:600,backgroundColor:'greenyellow',position:'relative'}}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" style={{backgroundColor:"green"}}>
@@ -48,13 +48,13 @@ const MyCard = ({id,title, description, users,thisUser, onDelete, onUpdate }) =>
           <div style={{display:"flex"}}>
             <Input value={editedDescValue} onChange={(e) => setEditedDescValue(e.target.value)}/>
             <IconButton aria-label="delete" onClick={update}>
-              <Check />
+              <Check color='primary' />
             </IconButton>
             <IconButton aria-label="delete" onClick={() => {
               setEditing(false);
               setEditedDescValue(description);
             }}>
-              <Close/>
+              <Close color="error"/>
             </IconButton>
           </div>
         }
@@ -68,12 +68,15 @@ const MyCard = ({id,title, description, users,thisUser, onDelete, onUpdate }) =>
         </Typography>
         
       </CardContent>
-      <IconButton aria-label="delete" onClick={deleteOne}>
-        <Delete />
-      </IconButton>
-      <IconButton aria-label="update" onClick={() => setEditing(true)}>
-        <Edit />
-      </IconButton>
+      <div>
+        <IconButton className='icBtn' sx={{position:'absolute',top:0,right:0,borderRadius:0,borderBottomLeftRadius:8,background:'rgba(0,0,0,.6)',display:'none',padding:0}} aria-label="delete" onClick={deleteOne}>
+
+          <Delete color="error"/>
+        </IconButton>
+        <IconButton className='icBtn' sx={{position:'absolute',borderRadius:0,borderTopLeftRadius:8,background:'rgba(0,0,0,.6)',bottom:0,right:0,display:'none',padding:0}} aria-label="update" onClick={() => setEditing(true)}>
+          <Edit color="primary"/>
+        </IconButton>
+      </div>
     </Card>
   );
 };

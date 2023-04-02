@@ -9,6 +9,8 @@ import {
   TextField
 } from '@mui/material';
 import { socket } from '@/socket';
+import { Create } from '@mui/icons-material';
+
 
 function Modal({thisUser}) {
   const [open, setOpen] = useState(false);
@@ -16,6 +18,8 @@ function Modal({thisUser}) {
   const [description, setDescription] = useState('');
 
   const handleClose = () => {
+    setTitle('');
+    setDescription('');
     setOpen(false);
   };
 
@@ -26,7 +30,7 @@ function Modal({thisUser}) {
 
   return (
     <div>
-      <Button startIcon="+" variant="contained" onClick={() => setOpen(true)}>
+      <Button startIcon={<Create/>} variant="contained" onClick={() => setOpen(true)}>
         Create
       </Button>
       <Dialog open={open} onClose={handleClose}>
