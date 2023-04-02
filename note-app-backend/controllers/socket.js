@@ -20,11 +20,16 @@ const socketController = (io) => {
       note
         .save()
         .then((newNote) => {
-          console.log(newNote);
-          io.emit("note:create", newNote);
+          Note.find().limit(10).then(notes => {
+            io.emit('data', notes);
+          }).catch(err => console.log(err))
         })
         .catch((error) => console.log("Error creating note", error));
     });
+
+    socket.on("updating",(data) => {
+      io.emit("updates",data)
+    })
 
     socket.on("note:update", (data) => {
       Note.findByIdAndUpdate(
@@ -37,7 +42,9 @@ const socketController = (io) => {
         { new: true }
       )
         .then((updatedNote) => {
-          io.emit("note:update", updatedNote);
+          Note.find().limit(10).then(notes => {
+            io.emit('data', notes);
+          }).catch(err => console.log(err))
         })
         .catch((error) => console.log("Error updating note", error));
     });
@@ -45,7 +52,9 @@ const socketController = (io) => {
     socket.on("note:delete", (data) => {
       Note.findByIdAndDelete(data.id)
         .then(() => {
-          io.emit("note:delete", data.id);
+          Note.find().limit(10).then(notes => {
+            io.emit('data', notes);
+          }).catch(err => console.log(err))
         })
         .catch((error) => console.log("Error deleting note", error));
     });

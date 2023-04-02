@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import MyCard from '@/components/MyCard';
 import { socket } from '@/socket';
+import Modal from '@/components/Modal';
 
 const Home = () => {
   const router = useRouter();
@@ -24,8 +25,12 @@ const Home = () => {
       console.log("data is set",data);
     })
 
+    socket.on("note:update",(data)=> {
+      console.log("updatedUser",data);
+    })
+
     return () => {
-      socket.off('data', 'data',(data) => {
+      socket.off('data',(data) => {
         setData(data);
         console.log("data is set",data);
       });
@@ -48,25 +53,23 @@ const Home = () => {
   // })
 
 
-  socket.emit('needData')
-
-
-
-
   
   if (!isLoggedIn) {
     return null;
   }
 
   return (
-    <div style={{display:"grid",placeItems:'center'}}>
+    <div style={{margin:"0 0 0 8%",alignSelf:'center'}}>
+      <div style={{display:"flex"}}>
+      <Modal thisUser={router.query.user}/>
       <button onClick={handleLogout}>Logout</button>
+      </div>
       <div style={{display:"flex",flexDirection:"row",flexWrap:"wrap"}}>
         {data.map(item => {
-          console.log(item);
+
           return (
           <div key={item._id}  style={{margin:16}}>
-            <MyCard title={item.title} description={item.description} users={item.contributors}/>
+            <MyCard id={item._id} thisUser={router.query.user} title={item.title} description={item.description} users={item.contributors}/>
           </div>
           )
         })}
