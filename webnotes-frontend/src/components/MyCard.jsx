@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -15,15 +15,18 @@ import { socket } from '@/socket';
 const MyCard = ({id,title, description, users,thisUser, onDelete, onUpdate }) => {
   const [editing,setEditing] = React.useState(false);
   const [editedDescValue,setEditedDescValue] = React.useState(description);
+  const [editedTitle,setEditedTitle] = React.useState(title);
 
   const update = () => {
     console.log(id,title,editedDescValue,thisUser)
-    socket.emit("note:update",{
-      id:id,
-      title: title,
-      description: editedDescValue,
-      user:thisUser
-    })
+    if(editedDescValue !== description || editedTitle !== title){
+      socket.emit("note:update",{
+        id:id,
+        title: editedTitle,
+        description: editedDescValue,
+        user:thisUser
+      })
+  }
     setEditing(false)
   }
 
@@ -37,27 +40,30 @@ const MyCard = ({id,title, description, users,thisUser, onDelete, onUpdate }) =>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" style={{backgroundColor:"green"}}>
-            {users[0] ? users[0][0].toUpperCase():"A"}
+            {users.length > 0 ? users[users.length-1][0].toUpperCase():"A"}
           </Avatar>
         }
-        title={title}
-        subheader={editing?editedDescValue:description}
+        title={editing?
+          <Input onChange={(event) => setEditedTitle(event.target.value)} sx={{borderBottom:0,fontSize:14}} value={editedTitle}/>:
+          title
+        }
+        subheader={editing?<div style={{display:"flex",alignItems:'end',justifyContent:'center'}}>
+                        <Input autoFocus sx={{textDecoration:'none'}} variant="outlined" multiline maxRows={3} fullWidth={true} value={editedDescValue} onChange={(e) => setEditedDescValue(e.target.value)}/>
+                        <IconButton aria-label="delete" onClick={update}>
+                          <Check color='primary' />
+                        </IconButton>
+                        <IconButton aria-label="edit" onClick={() => {
+                          setEditing(false);
+                          setEditedDescValue(description);
+                          setEditedTitle(title);
+                        }}>
+                          <Close color="error"/>
+                        </IconButton>
+                      </div>
+                  :description
+                }
       />
       <CardContent>
-      {editing &&
-          <div style={{display:"flex"}}>
-            <Input value={editedDescValue} onChange={(e) => setEditedDescValue(e.target.value)}/>
-            <IconButton aria-label="delete" onClick={update}>
-              <Check color='primary' />
-            </IconButton>
-            <IconButton aria-label="delete" onClick={() => {
-              setEditing(false);
-              setEditedDescValue(description);
-            }}>
-              <Close color="error"/>
-            </IconButton>
-          </div>
-        }
         <Typography variant="body2" color="textSecondary" component="p">
           {users.map((user, index) => (
             <span key={index}>

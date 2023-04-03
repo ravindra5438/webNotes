@@ -34,7 +34,7 @@ function Modal({thisUser}) {
         Create
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Note</DialogTitle>
+        <DialogTitle>New Note</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please enter the title and description for your new Note:
