@@ -73,8 +73,8 @@ const socketController = (io) => {
       Note.find()
         .limit(data.limit)
         .then((notes) => {
-          io.emit("scroll", notes).catch((err) => console.log(err));
-        });
+          io.emit("scroll", notes)
+        }).catch((err) => console.log(err));
     });
 
     socket.on("disconnect", () => {
